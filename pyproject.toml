@@ -1,6 +1,6 @@
 [project]
 name = "airflow_dags"
-version = "0.1.3"
+version = "0.1.4"
 description = "Default template for PDM package"
 authors = [
     {name = "Mingk42", email = "xoals123456t@gmail.com"},
