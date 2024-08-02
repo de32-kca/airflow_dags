@@ -1,9 +1,0 @@
-README.md
-pyproject.toml
-src/airflow_dags/__init__.py
-src/airflow_dags/ib.py
-src/airflow_dags.egg-info/PKG-INFO
-src/airflow_dags.egg-info/SOURCES.txt
-src/airflow_dags.egg-info/dependency_links.txt
-src/airflow_dags.egg-info/entry_points.txt
-src/airflow_dags.egg-info/top_level.txt
