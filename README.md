@@ -3,6 +3,7 @@
 ### Extract 2018.01.~2018.04.
 
 ### ice_breaking
+- [ ] 이미지 변경 필요
 ```bash
 $ ice_breaking
 
