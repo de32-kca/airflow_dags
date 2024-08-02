@@ -6,7 +6,7 @@ standalone_admin_password.txt
 airflow.db
 *.pid
 *.swp
+*.cfg
 
 .pdm-python
-airflow.cfg
 webserver_config.py
