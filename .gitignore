@@ -1,6 +1,12 @@
-logs
-standalone_admin_password.txt
-*.pid
+
+logs/
 __pycache__
+
+standalone_admin_password.txt
 airflow.db
+*.pid
 *.swp
+
+.pdm-python
+airflow.cfg
+webserver_config.py
