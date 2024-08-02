@@ -31,7 +31,7 @@ with DAG(
     description='movie',
     schedule="10 2 * * *",
     start_date=datetime(2018, 5, 1),
-    end_date=datetime(2018, 8, 31),
+    end_date=datetime(2018, 5, 3),
     catchup=True,
     tags=['movie'],
 ) as dag:
@@ -52,14 +52,14 @@ with DAG(
         task_id='get.data',
         python_callable=get_data,
         system_site_packages=False,
-        requirements=["https://github.com/de32-kca/extract.git"],
+        requirements=["git+https://github.com/de32-kca/extract.git@release/d1.0.0"],
     )
 
     save_data = PythonVirtualenvOperator(
         task_id='save.data',
         python_callable=save_data,
         system_site_packages=False,
-        requirements=["https://github.com/de32-kca/extract.git"],
+        requirements=["git+https://github.com/de32-kca/extract.git@release/d1.0.0"],
     )
 
     start >> get_data >> save_data >> end
