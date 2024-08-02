@@ -1,0 +1,18 @@
+[project]
+name = "airflow_dags"
+version = "0.1.5"
+description = "Default template for PDM package"
+authors = [
+    {name = "Mingk42", email = "xoals123456t@gmail.com"},
+]
+dependencies = []
+requires-python = ">=3.9"
+readme = "README.md"
+license = {text = "MIT"}
+
+[project.scripts]
+ice_breaking="airflow_dags.ib:ice_breaking"
+
+
+[tool.pdm]
+distribution = false

@@ -1,0 +1,2 @@
+[console_scripts]
+ice_breaking = airflow_dags.ib:ice_breaking
