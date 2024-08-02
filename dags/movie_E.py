@@ -24,22 +24,40 @@ with DAG(
     tags=["movie","E", "extract","2018"],
 ) as dag:
 
-    def test():
-        import os
+    def pic():
+        from extract.ice_breaking import pic
         
-        os.system('ice_breaking')
+        pic()
 
     task_get_data=PythonVirtualenvOperator(
                 task_id="get.data",
-                python_callable=test,
-                requirements=["git+https://github.com/de32-kca/airflow_dags.git@d1.0.2/movie_1"],
+                python_callable=pic,
+                requirements=["git+https://github.com/de32-kca/extract.git@release/d1.0.0"],
                 system_site_packages=False,
                 # op_kwargs=kwargs["op_kwargs"]
             )
 
-    task_save_data=EmptyOperator(task_id="save.data")
-    task_start=EmptyOperator(task_id="start")
-    task_end=EmptyOperator(task_id="end")
+    task_save_data=PythonVirtualenvOperator(
+                task_id="save.data",
+                python_callable=pic,
+                requirements=["git+https://github.com/de32-kca/extract.git@release/d1.0.0"],
+                system_site_packages=False,
+                # op_kwargs=kwargs["op_kwargs"]
+            )
+    task_start=PythonVirtualenvOperator(
+                task_id="start",
+                python_callable=pic,
+                requirements=["git+https://github.com/de32-kca/extract.git@release/d1.0.0"],
+                system_site_packages=False,
+                # op_kwargs=kwargs["op_kwargs"]
+            )
+    task_end=PythonVirtualenvOperator(
+                task_id="end",
+                python_callable=pic,
+                requirements=["git+https://github.com/de32-kca/extract.git@release/d1.0.0"],
+                system_site_packages=False,
+                # op_kwargs=kwargs["op_kwargs"]
+            )
 
     task_start >> task_get_data >> task_save_data >> task_end
 
