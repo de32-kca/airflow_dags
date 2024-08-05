@@ -24,7 +24,8 @@ $ cat ~/airflow_team/standalone_admin_password.txt    # airflow 패스워드 확
 ```
 
 ### Gragh
-![d2 pp](https://github.com/user-attachments/assets/7cd895e5-8525-4314-87ba-86116fa883d2)
+![image](https://github.com/user-attachments/assets/c838ec1f-a969-4d1c-85d5-7137424a59ed)
+
 
 - [x] 각 task별 기능 추가 ~~필요~~ 완료
 - [x] 각 task별 ice_breaking 함수 호출 완료
