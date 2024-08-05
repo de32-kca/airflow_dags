@@ -28,7 +28,7 @@ with DAG(
     description='movie_E3',
     schedule="10 2 * * *",
     start_date=datetime(2018, 9, 1),
-    end_date=datetime(2018, 9, 3),
+    end_date=datetime(2019, 12, 1),
     catchup=True,
     tags=['api', 'movie', 'amt'],
 ) as dag:
