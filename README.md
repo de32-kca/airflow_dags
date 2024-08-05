@@ -56,11 +56,11 @@ $ tree
 
 ### dependency
 <ul>
-  <li>Extract module : <a target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/de32-kca/extract/tree/dev/d2.0.0">
+  <li>Extract module : <a target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/de32-kca/extract/releases/tag/release%2Fd2.0.0">
 <img alt="lastest : dev/d2.0.0" src="https://img.shields.io/badge/lastest-dev/d2.0.0-brightgreen">
 </a></li>
-    <li>Transform module: <a target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/de32-kca/transform">
-<img alt="lastest : Not Updated" src="https://img.shields.io/badge/lastest-Not Updated-darkred">
+    <li>Transform module: <a target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/de32-kca/transform/releases/tag/d2.0.0">
+<img alt="lastest : dev/d2.0.0" src="https://img.shields.io/badge/lastest-dev/d2.0.0-brightgreen">
 </a></li>
   <li>Load module:<a target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/de32-kca/load">
 <img alt="lastest : Not Updated" src="https://img.shields.io/badge/lastest-Not Updated-darkred">
