@@ -51,14 +51,14 @@ with DAG(
         task_id='get.data.origin',
         python_callable=get_data,
         system_site_packages=False,
-        requirements=["git+https://github.com/de32-kca/extract.git@d2.0.0/mingk"]
+        requirements=["git+https://github.com/de32-kca/extract.git"]
     )
 
     get_data_nation = PythonVirtualenvOperator(
         task_id='get.data.nation',
         python_callable=get_data,
         system_site_packages=False,
-        requirements=["git+https://github.com/de32-kca/extract.git@d2.0.0/mingk"],
+        requirements=["git+https://github.com/de32-kca/extract.git"],
         op_kwargs={
             "url_param" : { "repNationCd": "K" }
         }

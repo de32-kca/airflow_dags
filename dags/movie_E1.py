@@ -66,7 +66,7 @@ with DAG(
     task_get_data=PythonVirtualenvOperator(
                 task_id="get.data",
                 python_callable=get_data,
-                requirements=["git+https://github.com/de32-kca/extract.git@d2.0.0/mingk"],
+                requirements=["git+https://github.com/de32-kca/extract.git"],
                 system_site_packages=False,
                 # op_kwargs=kwargs["op_kwargs"]
             )
@@ -74,7 +74,7 @@ with DAG(
     task_get_data_kor=PythonVirtualenvOperator(
                 task_id="get.data.kor",
                 python_callable=get_data,
-                requirements=["git+https://github.com/de32-kca/extract.git@d2.0.0/mingk"],
+                requirements=["git+https://github.com/de32-kca/extract.git"],
                 system_site_packages=False,
                 op_kwargs={
                     "url_param":{ "repNationCd":"K"}
@@ -92,7 +92,7 @@ with DAG(
     task_start=PythonVirtualenvOperator(
                 task_id="start",
                 python_callable=pic,
-                requirements=["git+https://github.com/de32-kca/extract.git@d2.0.0/mingk"],
+                requirements=["git+https://github.com/de32-kca/extract.git"],
                 system_site_packages=False,
                 # op_kwargs=kwargs["op_kwargs"]
             )
@@ -100,7 +100,7 @@ with DAG(
     task_end=PythonVirtualenvOperator(
                 task_id="end",
                 python_callable=pic,
-                requirements=["git+https://github.com/de32-kca/extract.git@d2.0.0/mingk"],
+                requirements=["git+https://github.com/de32-kca/extract.git"],
                 system_site_packages=False,
                 # op_kwargs=kwargs["op_kwargs"]
             )
@@ -108,7 +108,7 @@ with DAG(
     task_get_start=PythonVirtualenvOperator(
                 task_id="get.start",
                 python_callable=pic,
-                requirements=["git+https://github.com/de32-kca/extract.git@d2.0.0/mingk"],
+                requirements=["git+https://github.com/de32-kca/extract.git"],
                 system_site_packages=False,
                 # op_kwargs=kwargs["op_kwargs"],
                 trigger_rule="none_failed"
@@ -116,7 +116,7 @@ with DAG(
     task_get_end=PythonVirtualenvOperator(
                 task_id="get.end",
                 python_callable=pic,
-                requirements=["git+https://github.com/de32-kca/extract.git@d2.0.0/mingk"],
+                requirements=["git+https://github.com/de32-kca/extract.git"],
                 system_site_packages=False,
                 # op_kwargs=kwargs["op_kwargs"],
                 trigger_rule="none_failed"
