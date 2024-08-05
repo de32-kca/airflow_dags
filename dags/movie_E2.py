@@ -33,9 +33,11 @@ with DAG(
 
     def get_data(ds_nodash, url_param={}):
         from extract.extract import save2df
+        from extract.ice_breaking import pic
+
+        pic()
         df = save2df(ds_nodash, url_param)
-        p_cols = ['load_dt'] + list(url_param.keys())
-        df.to_parquet('~/code/de32-kca/data_kca', partition_cols=p_cols)
+        df.to_parquet('~/code/de32-kca/data_kca', partition_cols=['load_dt', 'repNationCd'])
 
     start = EmptyOperator(task_id='start')
     end = EmptyOperator(task_id='end', trigger_rule="all_done")
