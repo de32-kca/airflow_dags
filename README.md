@@ -32,5 +32,5 @@ $ cat ~/airflow_team/standalone_admin_password.txt    # airflow 패스워드 확
 
 ### dependency
 - [Extract module](https://github.com/de32-kca/extract/tree/dev/d2.0.0)
-- [Transform module]()
-- [Load module]()
+- [Transform module](https://github.com/de32-kca/transform)
+- [Load module](https://github.com/de32-kca/load)
