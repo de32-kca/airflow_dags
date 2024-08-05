@@ -42,7 +42,7 @@ with DAG(
 
     rm_dir = BashOperator(
         task_id='rm.dir',
-        bash_command='rm -rf ~/code/de32-kca/data_kca/loadDt={{ ds_nodash }}'
+        bash_command='rm -rf ~/code/de32-kca/data_kca/load_dt={{ ds_nodash }}'
     )
 
     get_data_origin = PythonVirtualenvOperator(
