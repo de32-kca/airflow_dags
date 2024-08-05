@@ -31,6 +31,15 @@ $ cat ~/airflow_team/standalone_admin_password.txt    # airflow 패스워드 확
 - [x] 각 task별 ice_breaking 함수 호출 완료
 
 ### dependency
-- [Extract module](https://github.com/de32-kca/extract/tree/dev/d2.0.0)
-- [Transform module](https://github.com/de32-kca/transform)
-- [Load module](https://github.com/de32-kca/load)
+<ul>
+  <li>Extract module : <a target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/de32-kca/extract/tree/dev/d2.0.0">
+<img alt="lastest : dev/d2.0.0" src="https://img.shields.io/badge/lastest-dev/d2.0.0-brightgreen">
+</a></li>
+    <li>Transform module: <a target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/de32-kca/transform">
+<img alt="lastest : Not Updated" src="https://img.shields.io/badge/lastest-Not Updated-darkred">
+</a></li>
+  <li>Load module:<a target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/de32-kca/load">
+<img alt="lastest : Not Updated" src="https://img.shields.io/badge/lastest-Not Updated-darkred">
+</a></li>
+</ul>
+
