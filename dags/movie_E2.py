@@ -33,12 +33,12 @@ with DAG(
     start_date=datetime(2018, 5, 1),
     end_date=datetime(2018, 5, 3),
     catchup=True,
-    tags=['movie'],
+    tags=['2018', 'movie', 'extract'],
 ) as dag:
 
-    def get_data():
-        from extract.ice_breaking import pic
-        pic()
+    def get_data(ds_nodash, url_param={"":""}):
+        from extract.extract import save2df
+        df = save2df(ds_nodash, url_param)
 
     def save_data():
         from extract.ice_breaking import pic
@@ -48,11 +48,21 @@ with DAG(
     start = EmptyOperator(task_id='start')
     end = EmptyOperator(task_id='end', trigger_rule="all_done")
 
-    get_data = PythonVirtualenvOperator(
-        task_id='get.data',
+    get_data_origin = PythonVirtualenvOperator(
+        task_id='get.data.origin',
         python_callable=get_data,
         system_site_packages=False,
-        requirements=["git+https://github.com/de32-kca/extract.git@release/d1.0.0"],
+        requirements=["git+https://github.com/de32-kca/extract.git@d2.0.0/mingk"]
+    )
+
+    get_data_nationK = PythonVirtualenvOperator(
+        task_id='get.data.nationK',
+        python_callable=get_data,
+        system_site_packages=False,
+        requirements=["git+https://github.com/de32-kca/extract.git@d2.0.0/mingk"],
+        op_kwargs={
+            "url_param" : { "repNationCd": "K" }
+        }
     )
 
     save_data = PythonVirtualenvOperator(
@@ -62,4 +72,5 @@ with DAG(
         requirements=["git+https://github.com/de32-kca/extract.git@release/d1.0.0"],
     )
 
-    start >> get_data >> save_data >> end
+    start >> get_data_origin >> save_data >> end
+    start >> get_data_nationK >> save_data >> end
