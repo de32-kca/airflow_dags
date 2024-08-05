@@ -33,31 +33,39 @@ with DAG(
     tags=['api', 'movie', 'amt'],
 ) as dag:
 
-    def get_data():
-        from extract.ice_breaking import pic
-        pic()
+    def get_data(ds_nodash, url_param={}):
+        from extract.extract import save2df
+        df=save2df(ds_nodash, url_param)
+        p_cols = ['load_dt'] + list(url_param.keys())
+        df.to_parquet('~/code/de32-kca/data_kca', partition_cols=p_cols)
 
-    def save_data():
-        from extract.ice_breaking import pic
-        pic()
 
-    # t1, t2 and t3 are examples of tasks created by instantiating operators
 
-    get_data = PythonVirtualenvOperator(
-        task_id='get.data',
+    get_data_origin = PythonVirtualenvOperator(
+        task_id='get.data.origin',
         python_callable=get_data,
         system_site_packages=False,
-        requirements=["git+https://github.com/de32-kca/extract.git@release/d1.0.0"],
+        requirements=["git+https://github.com/de32-kca/extract.git@d2.0.0/mingk"]
     )
 
-    save_data = PythonVirtualenvOperator(
-        task_id='save.data',
-        python_callable=save_data,
-        system_site_packages=False,
-        requirements=["git+https://github.com/de32-kca/extract.git@release/d1.0.0"],
+    rm_dir = BashOperator(
+        task_id='rm.dir',
+        bash_command='rm -rf ~/code/de32-kca/data_kca/load_dt={{ ds_nodash }}',
     )
+
+    get_data_nationK = PythonVirtualenvOperator(
+        task_id='get.data.nation',
+        python_callable=get_data,
+        system_site_packages=False,
+        requirements=["git+https://github.com/de32-kca/extract.git@d2.0.0/mingk"],
+        op_kwargs={
+            "url_param" : { "repNationCd": "K" }
+        }
+    )
+
     
     start = EmptyOperator(task_id='start')
     end = EmptyOperator(task_id='end')
     
-    start >> get_data >> save_data >> end
+    start >> rm_dir >> get_data_origin >> end
+    start >> rm_dir >> get_data_nationK >> end
