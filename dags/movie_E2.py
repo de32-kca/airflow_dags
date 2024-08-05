@@ -14,13 +14,8 @@ from airflow.operators.python import (
         BranchPythonOperator
     )
 
-# import func
-#from movie.api.call import gen_url, req, get_key, req2list, list2df, save2df
-
 with DAG(
     'movie_E2',
-    # These args will get passed on to each operator
-    # You can override them on a per-task basis during operator initialization
     default_args={
         'depends_on_past': False,
         'retries': 1,
@@ -31,22 +26,24 @@ with DAG(
     description='movie',
     schedule="10 2 * * *",
     start_date=datetime(2018, 5, 1),
-    end_date=datetime(2018, 5, 3),
+    end_date=datetime(2018, 5, 5),
     catchup=True,
     tags=['2018', 'movie', 'extract'],
 ) as dag:
 
-    def get_data(ds_nodash, url_param={"":""}):
+    def get_data(ds_nodash, url_param={}):
         from extract.extract import save2df
         df = save2df(ds_nodash, url_param)
+        p_cols = ['load_dt'] + list(url_param.keys())
+        df.to_parquet('~/code/de32-kca/data_kca', partition_cols=p_cols)
 
-    def save_data():
-        from extract.ice_breaking import pic
-        pic()
-
-    # t1, t2 and t3 are examples of tasks created by instantiating operators
     start = EmptyOperator(task_id='start')
     end = EmptyOperator(task_id='end', trigger_rule="all_done")
+
+    rm_dir = BashOperator(
+        task_id='rm.dir',
+        bash_command='rm -rf ~/code/de32-kca/data_kca/loadDt={{ ds_nodash }}'
+    )
 
     get_data_origin = PythonVirtualenvOperator(
         task_id='get.data.origin',
@@ -55,8 +52,8 @@ with DAG(
         requirements=["git+https://github.com/de32-kca/extract.git@d2.0.0/mingk"]
     )
 
-    get_data_nationK = PythonVirtualenvOperator(
-        task_id='get.data.nationK',
+    get_data_nation = PythonVirtualenvOperator(
+        task_id='get.data.nation',
         python_callable=get_data,
         system_site_packages=False,
         requirements=["git+https://github.com/de32-kca/extract.git@d2.0.0/mingk"],
@@ -65,12 +62,4 @@ with DAG(
         }
     )
 
-    save_data = PythonVirtualenvOperator(
-        task_id='save.data',
-        python_callable=save_data,
-        system_site_packages=False,
-        requirements=["git+https://github.com/de32-kca/extract.git@release/d1.0.0"],
-    )
-
-    start >> get_data_origin >> save_data >> end
-    start >> get_data_nationK >> save_data >> end
+    start >> rm_dir >> [ get_data_origin, get_data_nation ] >> end
