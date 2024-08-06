@@ -37,14 +37,32 @@ with DAG(
 
         pic()
         df = save2df(ds_nodash, url_param)
-        df.to_parquet('~/code/de32-kca/data_kca', partition_cols=['load_dt', 'repNationCd'])
+        df.to_parquet('~/code/de32-kca/data_kca/extract_kca/', partition_cols=['load_dt', 'repNationCd'])
+
+    def chk_exist(ds_nodash):
+        import os
+
+        home_dir = os.path.expanduser("~")
+        target_path=f"{home_dir}/code/de32-kca/data_kca/extract_kca/load_dt={ds_nodash}"
+
+        print(os.path.exists(target_path), target_path)
+
+        if os.path.exists(target_path):
+            return "rm.dir"
+        else:
+            return "get.data.origin","get.data.nation"
 
     start = EmptyOperator(task_id='start')
     end = EmptyOperator(task_id='end', trigger_rule="all_done")
 
+    task_chk_exist = BranchPythonOperator(
+            task_id="chk.exist",
+            python_callable=chk_exist,
+    )
+
     rm_dir = BashOperator(
         task_id='rm.dir',
-        bash_command='rm -rf ~/code/de32-kca/data_kca/load_dt={{ ds_nodash }}'
+        bash_command='rm -rf ~/code/de32-kca/data_kca/extract_kca/load_dt={{ ds_nodash }}'
     )
 
     get_data_origin = PythonVirtualenvOperator(
@@ -64,4 +82,4 @@ with DAG(
         }
     )
 
-    start >> rm_dir >> [ get_data_origin, get_data_nation ] >> end
+    start >> task_chk_exist >> rm_dir >> [ get_data_origin, get_data_nation ] >> end
