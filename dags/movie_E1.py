@@ -61,6 +61,7 @@ with DAG(
                 task_id="get.data",
                 python_callable=get_data,
                 requirements=["git+https://github.com/de32-kca/extract.git"],
+                trigger_rule="none_failed",
                 system_site_packages=False,
                 # op_kwargs=kwargs["op_kwargs"]
             )
@@ -69,6 +70,7 @@ with DAG(
                 task_id="get.data.kor",
                 python_callable=get_data,
                 requirements=["git+https://github.com/de32-kca/extract.git"],
+                trigger_rule="none_failed",
                 system_site_packages=False,
                 op_kwargs={
                     "url_param":{ "repNationCd":"K"}
