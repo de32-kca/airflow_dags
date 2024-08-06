@@ -38,7 +38,7 @@ $ cat ~/airflow_team/standalone_admin_password.txt    # airflow 패스워드 확
 ##### extract
 ```bash
 $ pwd
-/home/usernm/code/de32-kca    # parquet 저장경로
+/home/usernm/code/de32-kca/extract_kca    # parquet 저장경로
 
 $ tree
 .
