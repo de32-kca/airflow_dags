@@ -32,7 +32,7 @@ with DAG(
         df=save2df(ds_nodash,url_param)
         df.to_parquet("~/code/de32-kca/data_kca/extract_kca/",partition_cols=["load_dt","repNationCd"])
 
-    def chk_exist(ds_nodash="20180101"):
+    def chk_exist(ds_nodash):
         import os
         
         home_dir = os.path.expanduser("~")
@@ -43,7 +43,7 @@ with DAG(
         if os.path.exists(target_path):
             return "rm.dir"
         else:
-            return "get.start"
+            return "get.data", "get.data.kor"
 
     task_chk_exist=BranchPythonOperator(
                 task_id="chk.exist",
