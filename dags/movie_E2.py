@@ -69,7 +69,8 @@ with DAG(
         task_id='get.data.origin',
         python_callable=get_data,
         system_site_packages=False,
-        requirements=["git+https://github.com/de32-kca/extract.git"]
+        requirements=["git+https://github.com/de32-kca/extract.git"],
+        trigger_rule="none_failed"
     )
 
     get_data_nation = PythonVirtualenvOperator(
@@ -77,9 +78,11 @@ with DAG(
         python_callable=get_data,
         system_site_packages=False,
         requirements=["git+https://github.com/de32-kca/extract.git"],
+        trigger_rule="none_failed",
         op_kwargs={
             "url_param" : { "repNationCd": "K" }
         }
     )
 
     start >> task_chk_exist >> rm_dir >> [ get_data_origin, get_data_nation ] >> end
+    task_chk_exist >> [ get_data_origin, get_data_nation ] >> end

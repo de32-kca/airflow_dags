@@ -40,7 +40,7 @@ with DAG(
         pic()
 
         df=save2df(ds_nodash, url_param)
-        df.to_parquet('~/code/de32-kca/data_kca/extracat_kca/', partition_cols=['load_dt', 'repNationCd'])
+        df.to_parquet('~/code/de32-kca/data_kca/extract_kca/', partition_cols=['load_dt', 'repNationCd'])
 
     def chk_exist(ds_nodash):
         import os
@@ -59,7 +59,8 @@ with DAG(
         task_id='get.data.origin',
         python_callable=get_data,
         system_site_packages=False,
-        requirements=["git+https://github.com/de32-kca/extract.git"]
+        requirements=["git+https://github.com/de32-kca/extract.git"],
+        trigger_rule="none_failed",
     )
 
     rm_dir = BashOperator(
@@ -72,6 +73,7 @@ with DAG(
         python_callable=get_data,
         system_site_packages=False,
         requirements=["git+https://github.com/de32-kca/extract.git"],
+        trigger_rule="none_failed",
         op_kwargs={
             "url_param" : { "repNationCd": "K" }
         }
@@ -85,5 +87,5 @@ with DAG(
     start = EmptyOperator(task_id='start')
     end = EmptyOperator(task_id='end')
     
-    start >> task_chk_exist >> rm_dir
-    rm_dir >> [get_data_nation, get_data_origin] >> end
+    start >> task_chk_exist >> rm_dir >> [get_data_nation, get_data_origin] >> end
+    task_chk_exist >> [get_data_nation, get_data_origin] >> end
