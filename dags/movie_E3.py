@@ -8,9 +8,9 @@ from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow.operators.empty import EmptyOperator
 from airflow.operators.python import (
-    ExternalPythonOperator,
     PythonOperator,
     PythonVirtualenvOperator,
+    BranchPythonOperator
 )
 
 
@@ -40,35 +40,52 @@ with DAG(
         pic()
 
         df=save2df(ds_nodash, url_param)
-        df.to_parquet('~/code/de32-kca/data_kca', partition_cols=['load_dt', 'repNationCd'])
+        df.to_parquet('~/code/de32-kca/extract_kca/', partition_cols=['load_dt', 'repNationCd'])
 
+    def chk_exist(ds_nodash):
+        import os
+        home_dir = os.path.expanduser("~")
+        target_path=f"{home_dir}/code/de32-kca/extract_kca/load_dt={ds_nodash}"
+
+        print(os.path.exists(target_path), target_path)
+
+        if os.path.exists(target_path):
+            return "rm.dir"
+        else:
+            return "get.data.origin","get.data.nation"
 
 
     get_data_origin = PythonVirtualenvOperator(
         task_id='get.data.origin',
         python_callable=get_data,
         system_site_packages=False,
-        requirements=["git+https://github.com/de32-kca/extract.git"]
+        requirements=["git+https://github.com/de32-kca/extract.git"],
+        trigger_rule="none_failed",
     )
 
     rm_dir = BashOperator(
         task_id='rm.dir',
-        bash_command='rm -rf ~/code/de32-kca/data_kca/load_dt={{ ds_nodash }}',
+        bash_command='rm -rf ~/code/de32-kca/extract_kca/load_dt={{ ds_nodash }}',
     )
 
-    get_data_nationK = PythonVirtualenvOperator(
+    get_data_nation = PythonVirtualenvOperator(
         task_id='get.data.nation',
         python_callable=get_data,
         system_site_packages=False,
         requirements=["git+https://github.com/de32-kca/extract.git"],
+        trigger_rule="none_failed",
         op_kwargs={
             "url_param" : { "repNationCd": "K" }
         }
     )
 
+    task_chk_exist = BranchPythonOperator(
+        task_id="chk.exist",
+        python_callable=chk_exist,
+    )
     
     start = EmptyOperator(task_id='start')
     end = EmptyOperator(task_id='end')
     
-    start >> rm_dir >> get_data_origin >> end
-    start >> rm_dir >> get_data_nationK >> end
+    start >> task_chk_exist >> rm_dir >> [get_data_nation, get_data_origin] >> end
+    task_chk_exist >> [get_data_nation, get_data_origin] >> end
