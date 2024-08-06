@@ -24,16 +24,21 @@ $ cat ~/airflow_team/standalone_admin_password.txt    # airflow 패스워드 확
 ```
 
 ### Gragh
+##### extract
 ![image](https://github.com/user-attachments/assets/c838ec1f-a969-4d1c-85d5-7137424a59ed)
 
 
 - [x] 각 task별 기능 추가 ~~필요~~ 완료
 - [x] 각 task별 ice_breaking 함수 호출 완료
 
-### extract result
+##### transform
+![image](https://github.com/user-attachments/assets/12aa434d-bc25-4089-9890-41c0fa93bb3a)
+
+### result
+##### extract
 ```bash
 $ pwd
-/home/usernm/code/de32-kca    # parquet 저장경로
+/home/usernm/code/de32-kca/extract_kca    # parquet 저장경로
 
 $ tree
 .
@@ -54,16 +59,22 @@ $ tree
 # reqNationCd = "K"(korea) || "G"(global)
 ```
 
+##### transform
+![image](https://github.com/user-attachments/assets/1574d4b0-ee94-499e-9f81-7ab1b625b947)
+
+##### load
+- dags 미사용
+
 ### dependency
 <ul>
   <li>Extract module : <a target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/de32-kca/extract/releases/tag/release%2Fd2.0.0">
 <img alt="lastest : dev/d2.0.0" src="https://img.shields.io/badge/lastest-dev/d2.0.0-brightgreen">
 </a></li>
-    <li>Transform module: <a target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/de32-kca/transform/releases/tag/d2.0.0">
-<img alt="lastest : dev/d2.0.0" src="https://img.shields.io/badge/lastest-dev/d2.0.0-brightgreen">
+    <li>Transform module: <a target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/de32-kca/transform/releases/tag/release%2Fd3.0.0">
+<img alt="lastest : dev/d3.0.0" src="https://img.shields.io/badge/lastest-dev/d3.0.0-brightgreen">
 </a></li>
-  <li>Load module:<a target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/de32-kca/load">
-<img alt="lastest : Not Updated" src="https://img.shields.io/badge/lastest-Not Updated-darkred">
+  <li>Load module:<a target="_blank" rel="noopener noreferrer nofollow" href="https://github.com/de32-kca/load/releases/tag/release%2Fd3.0.0">
+<img alt="lastest : dev/d3.0.0" src="https://img.shields.io/badge/lastest-dev/d3.0.0-brightgreen">
 </a></li>
 </ul>
 

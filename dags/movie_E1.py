@@ -19,37 +19,31 @@ with DAG(
     description="extract movie rank 2018.01~04.",
     schedule="10 0 * * *",
     start_date=datetime(2018, 1, 1),
-    end_date=datetime(2018, 4, 30),
+    end_date=datetime(2018, 5, 1),
     catchup=True,
     tags=["movie","E", "extract","2018"],
 ) as dag:
 
-
-    def pic():
-        from extract.ice_breaking import pic
-        
-        pic()
-
     def get_data(ds_nodash,url_param={}):
         from extract.extract import save2df
-        import pandas as pd
+        from extract.ice_breaking import pic
 
+        pic()
         df=save2df(ds_nodash,url_param)
+        df.to_parquet("~/code/de32-kca/extract_kca/",partition_cols=["load_dt","repNationCd"])
 
-        df.to_parquet("~/code/de32-kca/data_kca/",partition_cols=["load_dt","repNationCd"])
-
-    def chk_exist(ds_nodash="20180101"):
+    def chk_exist(ds_nodash):
         import os
         
         home_dir = os.path.expanduser("~")
-        target_path=f"{home_dir}/code/de32-kca/data_kca/load_dt={ds_nodash}"
+        target_path=f"{home_dir}/code/de32-kca/extract_kca/load_dt={ds_nodash}"
         
         print( os.path.exists(target_path),target_path)
 
         if os.path.exists(target_path):
             return "rm.dir"
         else:
-            return "get.start"
+            return "get.data", "get.data.kor"
 
     task_chk_exist=BranchPythonOperator(
                 task_id="chk.exist",
@@ -59,7 +53,7 @@ with DAG(
     task_rm_dir=BashOperator(
                 task_id="rm.dir",
                 bash_command="""
-                    rm -rf ~/code/de32-kca/data_kca/load_dt={{ds_nodash}}
+                    rm -rf ~/code/de32-kca/extract_kca/load_dt={{ds_nodash}}
                 """
                 )
 
@@ -67,6 +61,7 @@ with DAG(
                 task_id="get.data",
                 python_callable=get_data,
                 requirements=["git+https://github.com/de32-kca/extract.git"],
+                trigger_rule="none_failed",
                 system_site_packages=False,
                 # op_kwargs=kwargs["op_kwargs"]
             )
@@ -75,6 +70,7 @@ with DAG(
                 task_id="get.data.kor",
                 python_callable=get_data,
                 requirements=["git+https://github.com/de32-kca/extract.git"],
+                trigger_rule="none_failed",
                 system_site_packages=False,
                 op_kwargs={
                     "url_param":{ "repNationCd":"K"}
@@ -89,39 +85,9 @@ with DAG(
                 # op_kwargs=kwargs["op_kwargs"]
             )
     """
-    task_start=PythonVirtualenvOperator(
-                task_id="start",
-                python_callable=pic,
-                requirements=["git+https://github.com/de32-kca/extract.git"],
-                system_site_packages=False,
-                # op_kwargs=kwargs["op_kwargs"]
-            )
 
-    task_end=PythonVirtualenvOperator(
-                task_id="end",
-                python_callable=pic,
-                requirements=["git+https://github.com/de32-kca/extract.git"],
-                system_site_packages=False,
-                # op_kwargs=kwargs["op_kwargs"]
-            )
+    task_start = EmptyOperator(task_id='start')
+    task_end = EmptyOperator(task_id='end', trigger_rule="all_done")
 
-    task_get_start=PythonVirtualenvOperator(
-                task_id="get.start",
-                python_callable=pic,
-                requirements=["git+https://github.com/de32-kca/extract.git"],
-                system_site_packages=False,
-                # op_kwargs=kwargs["op_kwargs"],
-                trigger_rule="none_failed"
-            )
-    task_get_end=PythonVirtualenvOperator(
-                task_id="get.end",
-                python_callable=pic,
-                requirements=["git+https://github.com/de32-kca/extract.git"],
-                system_site_packages=False,
-                # op_kwargs=kwargs["op_kwargs"],
-                trigger_rule="none_failed"
-
-            )
-    task_start >> task_chk_exist >> [task_rm_dir, task_get_start]
-    task_rm_dir >> task_get_start
-    task_get_start >> [task_get_data, task_get_data_kor] >> task_get_end >> task_end
+    task_start >> task_chk_exist >> task_rm_dir >> [task_get_data, task_get_data_kor] >> task_end
+    task_chk_exist >> [task_get_data, task_get_data_kor] >> task_end
