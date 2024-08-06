@@ -25,7 +25,8 @@ $ cat ~/airflow_team/standalone_admin_password.txt    # airflow 패스워드 확
 
 ### Gragh
 ##### extract
-![image](https://github.com/user-attachments/assets/c838ec1f-a969-4d1c-85d5-7137424a59ed)
+![image](https://github.com/user-attachments/assets/dbca1bd4-ac53-4c5a-b209-23ebafff620c)
+
 
 
 - [x] 각 task별 기능 추가 ~~필요~~ 완료
